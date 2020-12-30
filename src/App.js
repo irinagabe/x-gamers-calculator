@@ -5,11 +5,11 @@ import * as Yup from 'yup';
 const Select = ({ label, ...props }) => {
   const [field, meta] = useField(props);
   return (
-    <div>
-      <label htmlFor={props.id || props.name}>{label}</label>
-      <select {...field} {...props} />
+    <div className="w-full mb-4 md:mb-0">
+      <label htmlFor={props.id || props.name} className="tracking-wide text-blue-400 text-md font-semibold mb-2">{label}</label>
+      <select {...field} {...props} className="w-full font-medium text-blue-700 border border-gray-200 rounded-md p-2 mb-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" />
       {meta.touched && meta.error ? (
-        <div>{meta.error}</div>
+        <div className="text-sm font-medium text-purple-500 pl-2">{meta.error}</div>
       ) : null}
     </div>
   );
@@ -19,11 +19,13 @@ const Input = ({ label, ...props }) => {
   const [field, meta] = useField(props);
   return (
     <>
-      <label htmlFor={props.id || props.name}>{label}</label>
-      <input  {...field} {...props} />
-      {meta.touched && meta.error ? (
-        <div className="error">{meta.error}</div>
-      ) : null}
+      <div className="w-auto mb-6 md:mb-0">
+        <label htmlFor={props.id || props.name} className="tracking-wide text-blue-400 text-md font-semibold mb-2">{label}</label>
+        <input  {...field} {...props} className="w-full font-medium text-blue-700 border border-gray-200 rounded-md p-2 mb-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" />
+        {meta.touched && meta.error ? (
+          <div className="text-sm font-medium text-purple-500 pl-2">{meta.error}</div>
+        ) : null}
+      </div>
     </>
   );
 };
@@ -32,36 +34,31 @@ function CostOfChips(chip, quantity) {
   return chip.price * quantity;
 }
 
-class ComponentsForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      values: {}
-    }
-  }
+function Calculator(values) {
+  const processor = processors.find(p => p.id === values.processor);
+  const ram = ramChips.find(r => r.id === values.ram);
+  const graphicsCard = graphicsCards.find(gc => gc.id === values.graphicsCard);
+  let total = processor.price +
+    CostOfChips(ram, values.numOfRAMSticks) +
+    CostOfChips(graphicsCard, values.numOfGrfxCards);
 
-  Calculator(values) {
-    const processor = processors.find(p => p.id === values.processor);
-    const ram = ramChips.find(r => r.id === values.ram);
-    const graphicsCard = graphicsCards.find(gc => gc.id === values.graphicsCard);
-    let total = processor.price +
-      CostOfChips(ram, values.numOfRAMSticks) +
-      CostOfChips(graphicsCard, values.numOfGrfxCards);
+  return total;
+};
 
-    return total;
-  };
-
-  render() {
-    return (
-      <>
+const ComponentsForm = () => {
+  return (
+    <>
+      <div className="flex items-center text-3xl text-blue-400 font-extrabold mb-4 ">
         <h1>Build A Rig</h1>
+      </div>
+      <div className="flex flex-col">
         <Formik
           initialValues={{
             processor: '',
             ram: '',
-            numOfRAMSticks: 0,
+            numOfRAMSticks: '',
             graphicsCard: '',
-            numOfGrfxCards: 0,
+            numOfGrfxCards: '',
           }}
           validationSchema={Yup.object({
             processor: Yup.string()
@@ -79,7 +76,7 @@ class ComponentsForm extends React.Component {
                 'Unavailable RAM chip chosen')
               .required('Choose a RAM chip'),
             numOfRAMSticks: Yup.string()
-              .max(8, 'Must be 8 chips or less')
+              .max(1, '1 to 9 only!')
               .required('Required'),
             graphicsCard: Yup.string()
               .oneOf(
@@ -94,7 +91,7 @@ class ComponentsForm extends React.Component {
           })}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
             await new Promise((r) => setTimeout(r, 400));
-            console.log(this.Calculator(values));
+            console.log(`KES ${Calculator(values)}`);
             console.log(JSON.stringify(values, null, 4));
             setSubmitting(false);
             resetForm({ values: '' });
@@ -107,43 +104,52 @@ class ComponentsForm extends React.Component {
                 <option value={processor.id} key={id}>{processor.model}</option>
               )}
             </Select>
-            <Select label="RAM" name="ram">
-              <option value="">Select a RAM chip</option>
-              {ramChips.map((chip, id) =>
-                <option value={chip.id} key={id}>{chip.size} GB</option>
-              )}
-            </Select>
-            <Input
-              label="No. of RAM Sticks"
-              name="numOfRAMSticks"
-              type="number"
-              placeholder="1"
-            />
-            <Select label="Graphics Card" name="graphicsCard">
-              <option value="">Select a graphics card</option>
-              {graphicsCards.map((card, id) =>
-                <option value={card.id} key={id}>{card.model} {card.vram} GB</option>
-              )}
-            </Select>
-            <Input
-              label="No. of Graphics Cards"
-              name="numOfGrfxCards"
-              type="number"
-              placeholder="1"
-            />
-            <br />
-            <button type="submit">Submit</button>
-            <button type="reset">Clear</button>
+            <div className="flex flex-row gap-2">
+              <Select label="RAM" name="ram">
+                <option value="">Select a RAM chip</option>
+                {ramChips.map((chip, id) =>
+                  <option value={chip.id} key={id}>
+                    {chip.size} GB {chip.class} {chip.speed ? `- ${chip.speed} GHz` : null}
+                  </option>
+                )}
+              </Select>
+              <Input
+                label="No. of RAM Sticks"
+                name="numOfRAMSticks"
+                type="number"
+                placeholder="1"
+              />
+            </div>
+            <div className="flex flex-row gap-2">
+              <Select label="Graphics Card" name="graphicsCard">
+                <option value="">Select a graphics card</option>
+                {graphicsCards.map((card, id) =>
+                  <option value={card.id} key={id}>{card.model} {card.vram} GB</option>
+                )}
+              </Select>
+              <Input
+                label="No. of Graphics Cards"
+                name="numOfGrfxCards"
+                type="number"
+                placeholder="1"
+              />
+            </div>
+            <div className="w-full flex flex-row gap-2">
+              <button type="reset" className="w-1/2 bg-blue-200 hover:bg-blue-300 text-blue-500 hover:text-white font-medium text-lg py-2 rounded">Clear Form</button>
+              <button type="submit" className="w-1/2 bg-blue-700 hover:bg-blue-500 text-white font-medium text-lg py-2 rounded">Calculate Total</button>
+            </div>
           </Form>
         </Formik>
-      </>
-    );
-  }
+      </div>
+    </>
+  );
 }
 
 function App() {
   return (
-    <ComponentsForm />
+    <div>
+      <ComponentsForm />
+    </div>
   );
 }
 
