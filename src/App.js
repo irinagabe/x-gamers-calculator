@@ -102,7 +102,7 @@ const ComponentsForm = () => {
                 )}
               </Select>
               <Input
-                label="No. of RAM Sticks"
+                label="Sticks"
                 name="numOfRAMSticks"
                 type="number"
                 placeholder="1,2..."
@@ -117,7 +117,7 @@ const ComponentsForm = () => {
                 )}
               </Select>
               <Input
-                label="No. of Graphics Cards"
+                label="Cards"
                 name="numOfGrfxCards"
                 type="number"
                 placeholder="1,2..."
