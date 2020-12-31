@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, useField } from 'formik';
 import * as Yup from 'yup';
 
@@ -46,6 +46,8 @@ function Calculator(values) {
 };
 
 const ComponentsForm = () => {
+  const [formValues, setFormValues] = useState({});
+
   return (
     <>
       <div className="flex items-center text-3xl text-blue-400 font-extrabold mb-4 ">
@@ -90,11 +92,11 @@ const ComponentsForm = () => {
               .required('Required'),
           })}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
+            setFormValues(values);
             await new Promise((r) => setTimeout(r, 400));
-            console.log(`KES ${Calculator(values)}`);
-            console.log(JSON.stringify(values, null, 4));
             setSubmitting(false);
             resetForm({ values: '' });
+            console.log(Calculator(formValues));
           }}
         >
           <Form>
@@ -105,7 +107,7 @@ const ComponentsForm = () => {
               )}
             </Select>
             <div className="flex flex-row gap-2">
-              <Select label="RAM" name="ram">
+              <Select label="RAM" name="ram" >
                 <option value="">Select a RAM chip</option>
                 {ramChips.map((chip, id) =>
                   <option value={chip.id} key={id}>
@@ -117,11 +119,12 @@ const ComponentsForm = () => {
                 label="No. of RAM Sticks"
                 name="numOfRAMSticks"
                 type="number"
-                placeholder="1"
+                placeholder="1,2..."
+
               />
             </div>
             <div className="flex flex-row gap-2">
-              <Select label="Graphics Card" name="graphicsCard">
+              <Select label="Graphics Card" name="graphicsCard" >
                 <option value="">Select a graphics card</option>
                 {graphicsCards.map((card, id) =>
                   <option value={card.id} key={id}>{card.model} {card.vram} GB</option>
@@ -131,11 +134,15 @@ const ComponentsForm = () => {
                 label="No. of Graphics Cards"
                 name="numOfGrfxCards"
                 type="number"
-                placeholder="1"
+                placeholder="1,2..."
+
               />
             </div>
             <div className="w-full flex flex-row gap-2">
-              <button type="reset" className="w-1/2 bg-blue-200 hover:bg-blue-300 text-blue-500 hover:text-white font-medium text-lg py-2 rounded">Clear Form</button>
+              <button
+                onClick={() => Calculator(formValues)}
+                type="reset"
+                className="w-1/2 bg-blue-200 hover:bg-blue-300 text-blue-500 hover:text-white font-medium text-lg py-2 rounded">Clear Form</button>
               <button type="submit" className="w-1/2 bg-blue-700 hover:bg-blue-500 text-white font-medium text-lg py-2 rounded">Calculate Total</button>
             </div>
           </Form>
