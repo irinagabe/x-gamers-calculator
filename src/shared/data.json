@@ -1,0 +1,83 @@
+{
+  "processors": [
+    {
+      "id": "1",
+      "model": "Intel Hexa Corei5 9400F (9th Gen)",
+      "clock_speed": 4.1,
+      "price": 21950
+    },
+    {
+      "id": "2",
+      "model": "AMD Ryzen 5 3600",
+      "clock_speed": 4.3,
+      "price": 28950
+    },
+    {
+      "id": "3",
+      "model": "Intel Corei7 10700KF (10th Gen)",
+      "clock_speed": 5.1,
+      "price": 49950
+    }
+  ],
+  "ramChips": [
+    {
+      "id": "1",
+      "size": 8,
+      "class": "DDR3",
+      "price": 5950
+    },
+    {
+      "id": "2",
+      "size": 8,
+      "class": "DDR4",
+      "price": 5950
+    },
+    {
+      "id": "3",
+      "size": 16,
+      "class": "DDR4",
+      "speed": 2.6,
+      "price": 10950
+    },
+    {
+      "id": "4",
+      "size": 16,
+      "class": "DDR4",
+      "speed": 3.2,
+      "price": 14500
+    },
+    {
+      "id": "5",
+      "size": 32,
+      "class": "DDR4",
+      "speed": 2.6,
+      "price": 19950
+    }
+  ],
+  "graphicsCards": [
+    {
+      "id": "1",
+      "model": "NVIDIA GT 710",
+      "vram": 2,
+      "price": 6450
+    },
+    {
+      "id": "2",
+      "model": "NVIDIA GeForce GT 730",
+      "vram": 4,
+      "price": 12950
+    },
+    {
+      "id": "3",
+      "model": "AMD Radeon R7 240",
+      "vram": 4,
+      "price": 13950
+    },
+    {
+      "id": "4",
+      "model": "NVIDIA GTX 1050Ti",
+      "vram": 4,
+      "price": 22950
+    }
+  ]
+}
